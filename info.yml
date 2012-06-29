@@ -1,0 +1,49 @@
+# expected fields in the configuration file for this app
+configuration:
+    entity_types:
+        type: list
+        values: {type: shotgun_entity_type}
+        default_value: [Task]
+        description: "List of Shotgun entity types where this 
+                     tank action should be visible on the Actions menu." 
+    
+    
+    deny_permissions:
+        type: list
+        values: {type: shotgun_permission_group}
+        allows_empty: True
+        description: "An optional parameter which lets you limit the visibility of this app. 
+                     If you for example put in ['Artist'] as the value for this parameter, 
+                     any user belonging to the shotgun permissions group Artist will not be 
+                     able to see or execute the App."
+    
+    deny_platforms:
+        type: list
+        values: {type: str}
+        allows_empty: True
+        default_value: [Linux]
+        description: "An optional parameter which lets you turn off this app on certain platforms. 
+                     If you don't want it to appear on the Tank action menu for a platform, just 
+                     include it in the the deny_platforms list. Valid values are 
+                     Windows, Mac and Linux."    
+    
+    windows_path:       
+        type: str
+        description: The path to the Photoshop executable on Windows.  
+    mac_path:       
+        type: str
+        description: The path to the Photoshop executable on Macosx.              
+    engine:     
+        type: str
+        description: "The name of the Photoshop engine to start. When this app runs, it will first 
+                     try to find an environment. This is based on the current context, e.g. the 
+                     Shot or Task in Shotgun from which the action was initiated. Once the 
+                     environment has been established (one of the files in the env folder in 
+                     the Tank configuration), an engine will be started. This parameter 
+                     specifies which engine to start. Typically this should be set to tk-photoshop 
+                     for the standard Photoshop engine."          
+
+
+# the Shotgun fields that this app needs in order to operate correctly
+requires_shotgun_fields:
+
