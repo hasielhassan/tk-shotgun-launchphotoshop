@@ -83,8 +83,12 @@ class LaunchPhotoshop(tank.platform.Application):
 
         entity_id = entity_ids[0]
 
-        # Try to create path for the context.  
-        self.tank.create_filesystem_structure(entity_type, entity_id)
+        # Try to create path for the context.
+        try:  
+            self.tank.create_filesystem_structure(entity_type, entity_id)
+        except tank.TankError, e:
+            raise Exception("Could not create folders on disk. Error reported: %s" % e)            
+        
 
         # kick off the app
         self.launch_from_entity(entity_type, entity_id)
