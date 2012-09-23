@@ -29,9 +29,11 @@ configuration:
     
     windows_path:       
         type: str
+        default_value: "C:\\Program Files\\Adobe\\Adobe Photoshop CS6\\Photoshop.exe"
         description: The path to the Photoshop executable on Windows.  
     mac_path:       
         type: str
+        default_value: "/Applications/Adobe Photoshop CS6/Adobe Photoshop CS6.app"
         description: The path to the Photoshop executable on Macosx.              
     engine:     
         type: str
