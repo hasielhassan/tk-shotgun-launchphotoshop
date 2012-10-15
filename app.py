@@ -24,9 +24,7 @@ class LaunchPhotoshop(tank.platform.Application):
         """Executes the app in a platform specific fashion"""
 
         # add our startup path to the photoshop init path
-        # (note: the convenience that auto-adds the python location for every app
-        # is not sufficient here because it only adds to sys.path, not to the actual env var)
-        startup_path = os.path.abspath(os.path.join( os.path.dirname(__file__), "python"))
+        startup_path = os.path.abspath(os.path.join( os.path.dirname(__file__), "startup"))
         tank.util.append_path_to_env_var("PYTHONPATH", startup_path)
 
         # get the setting        
