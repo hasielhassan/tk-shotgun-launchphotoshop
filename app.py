@@ -83,7 +83,7 @@ class LaunchPhotoshop(tank.platform.Application):
 
         # Try to create path for the context.
         try:  
-            self.tank.create_filesystem_structure(entity_type, entity_id)
+            self.tank.create_filesystem_structure(entity_type, entity_id, engine="tk-photoshop")
         except tank.TankError, e:
             raise Exception("Could not create folders on disk. Error reported: %s" % e)            
         
