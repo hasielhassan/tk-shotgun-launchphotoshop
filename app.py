@@ -54,6 +54,25 @@ class LaunchPhotoshop(tank.platform.Application):
                           "If you have any questions, don't hesitate to contact support "
                           "on tanksupport@shotgunsoftware.com." % app_path)
 
+        return cmd
+
+    def _register_event_log(self, ctx, command_executed, additional_meta):
+        """
+        Writes an event log entry to the shotgun event log, informing
+        about the app launch
+        """        
+        meta = {}
+        meta["engine"] = "%s %s" % (self.engine.name, self.engine.version) 
+        meta["app"] = "%s %s" % (self.name, self.version) 
+        meta["command"] = command_executed
+        meta["platform"] = platform.system()
+        if ctx.task:
+            meta["task"] = ctx.task["id"]
+        meta.update(additional_meta)
+        desc =  "%s %s: Launched Photoshop" % (self.name, self.version)
+        tank.util.create_event_log_entry(self.tank, ctx, "Tank_Photoshop_Startup", desc, meta)
+
+
     def launch_from_path(self, path):
         # Store data needed for bootstrapping Tank in env vars. Used in startup/menu.py
         os.environ["TANK_PHOTOSHOP_ENGINE"] = self.get_setting("engine")
@@ -61,7 +80,12 @@ class LaunchPhotoshop(tank.platform.Application):
         os.environ["TANK_PHOTOSHOP_FILE_TO_OPEN"] = path
 
         # now launch photoshop!
-        self._execute_app()
+        cmd = self._execute_app()
+        
+        # write an event log entry
+        ctx = self.tank.context_from_path(path)  
+        self._register_event_log(ctx, cmd, {"path": path})  
+        
 
     def launch_from_entity(self, entity_type, entity_id):
         engine = self.get_setting("engine")
@@ -73,7 +97,12 @@ class LaunchPhotoshop(tank.platform.Application):
         os.environ["TANK_PHOTOSHOP_ENTITY_ID"] = str(entity_id)
 
         # now launch photoshop!
-        self._execute_app()
+        cmd = self._execute_app()
+        
+        # write an event log entry
+        ctx = self.tank.context_from_entity(entity_type, entity_id)
+        self._register_event_log(ctx, cmd, {})
+        
 
     def launch_photoshop(self, entity_type, entity_ids):
         if len(entity_ids) != 1:
