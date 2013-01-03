@@ -2,7 +2,7 @@
 
 import os
 import tank
-import platform
+import sys
 
 class LaunchPhotoshop(tank.platform.Application):
     def init_app(self):
@@ -28,18 +28,18 @@ class LaunchPhotoshop(tank.platform.Application):
         tank.util.append_path_to_env_var("PYTHONPATH", startup_path)
 
         # get the setting        
-        system = platform.system()
+        system = sys.platform
         try:
-            app_setting = {"Linux": "linux_path", "Darwin": "mac_path", "Windows": "windows_path"}[system]
+            app_setting = {"darwin": "mac_path", "win32": "windows_path"}[system]
             app_path = self.get_setting(app_setting)
             if not app_path: raise KeyError()
         except KeyError:
             raise Exception("Platform '%s' is not supported." % system)
 
         # run the app
-        if system == "Darwin":
+        if system == "darwin":
             cmd = 'open -n "%s"' % app_path
-        elif system == "Windows":
+        elif system == "win32":
             cmd = 'start /B "Photoshop" "%s"' % app_path
         else:
             raise Exception("Platform '%s' is not supported." % system)
@@ -65,7 +65,7 @@ class LaunchPhotoshop(tank.platform.Application):
         meta["engine"] = "%s %s" % (self.engine.name, self.engine.version) 
         meta["app"] = "%s %s" % (self.name, self.version) 
         meta["command"] = command_executed
-        meta["platform"] = platform.system()
+        meta["platform"] = sys.platform
         if ctx.task:
             meta["task"] = ctx.task["id"]
         meta.update(additional_meta)
